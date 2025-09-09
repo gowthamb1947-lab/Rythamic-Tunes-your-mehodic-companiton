@@ -1,0 +1,150 @@
+body {
+    background-color: #111;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+.music-player {
+    background-color: #222;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+.controls button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 5px;
+    transition: background-color 0.3s;
+}
+.controls button:hover {
+    background-color: #45a049;
+}
+#visualizer-container {
+    margin-top: 20px;
+    display: none; /* Hide by default */
+}
+canvas {
+    background-color: black;
+    border: 2px solid #444;
+    border-radius: 5px;
+}
+Use code with caution.
+
+script.js
+This script uses the Web Audio API to play a track and draw a simple audio visualizer on the canvas element.
+javascript
+const audio = document.getElementById('audio-source');
+const playPauseBtn = document.getElementById('play-pause-btn');
+const visualizerBtn = document.getElementById('visualizer-btn');
+const visualizerContainer = document.getElementById('visualizer-container');
+const canvas = document.getElementById('visualizer');
+const ctx = canvas.getContext('2d');
+
+let audioCtx, analyser, source, dataArray;
+let isVisualizerActive = false;
+
+function setupAudio() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioCtx.createAnalyser();
+        source = audioCtx.createMediaElementSource(audio);
+        source.connect(analyser);
+        analyser.connect(audioCtx.destination);
+        analyser.fftSize = 256;
+        const bufferLength = analyser.frequencyBinCount;
+        dataArray = new Uint8Array(bufferLength);
+        canvas.width = 400;
+        canvas.height = 150;
+    }
+}
+
+function drawVisualizer() {
+    if (!isVisualizerActive) {
+        return;
+    }
+
+    requestAnimationFrame(drawVisualizer);
+
+    analyser.getByteFrequencyData(dataArray);
+
+    ctx.fillStyle = 'rgb(0, 0, 0)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const barWidth = (canvas.width / dataArray.length) * 2.5;
+    let x = 0;
+
+    for (let i = 0; i < dataArray.length; i++) {
+        const barHeight = dataArray[i] / 2;
+        const hue = (i / dataArray.length) * 360;
+        ctx.fillStyle = `hsl(${hue}, 100%, 50%)`;
+        ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+        x += barWidth + 1;
+    }
+}
+
+playPauseBtn.addEventListener('click', () => {
+    setupAudio();
+    if (audio.paused) {
+        audio.play();
+        playPauseBtn.textContent = 'Pause';
+    } else {
+        audio.pause();
+        playPauseBtn.textContent = 'Play';
+    }
+});
+
+visualizerBtn.addEventListener('click', () => {
+    isVisualizerActive = !isVisualizerActive;
+    if (isVisualizerActive) {
+        visualizerContainer.style.display = 'block';
+        if (audioCtx) {
+            drawVisualizer();
+        }
+    } else {
+        visualizerContainer.style.display = 'none';
+    }
+});
+
+audio.addEventListener('play', () => {
+    if (isVisualizerActive) {
+        setupAudio();
+        drawVisualizer();
+    }
+});
+Use code with caution.
+
+AI responses may include mistakes. Learn more
+
+
+
+undefined
+undefined
+undefined
+8 sites
+RhythmicTunes Your Melodic Companion - Music Streaming ...
+RhythmicTunes Your Melodic Companion - Music Streaming Application) Rythimic Tunes is a React. js-based music streaming application designed to enhance the user...
+favicon
+Scribd
+
+AI Builds a Full Music Generator in JavaScript | GANs ...
+Apr 15, 2025 — music generator web application development instructions overview this document provides detailed instructions for implementing a music generator...
+
+
+YouTube·BioniChaos
+
+7m
+12 AI Music Generators That Create Original Songs in 2025 | DigitalOcean
+Sep 4, 2025 — Here are 12 AI music generators for sound content creation in 2025: * 1. Mureka. Murkeka transforms musical inspiration into polished tracks by letting users tr...
+favicon
+DigitalOcean
+
